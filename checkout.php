@@ -13,6 +13,6 @@ if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
 // Add input fields for shipping and payment information
 echo "<form action='process_order.php' method='post'>";
 echo "Shipping Address: <input type='text' name='shipping_address'><br>";
-echo "Payment Method: <input type='text' name='payment_method'><br>";
+echo "Payment Method: <input type='text' name='payment_method' autocomplete='btc'><br>";
 echo "<input type='submit' value='Place Order'>";
 echo "</form>";
