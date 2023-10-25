@@ -16,5 +16,5 @@ if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
     echo "Your cart is empty.";
 }
 
-echo "<a href='product_list.php'>market</a>";
+echo "<a href='product_list.php'>market</a> ";
 echo "<a href='checkout.php'>checkout</a>";
