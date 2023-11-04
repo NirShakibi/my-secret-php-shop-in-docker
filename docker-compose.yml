@@ -1,4 +1,4 @@
-version: "3"
+version: "2"
 services:
   nginx:
     build:
@@ -20,6 +20,18 @@ services:
     volumes:
       - ./data/:/var/www/html/
         - ./logs/php.log:/var/log/fpm-php.www.log
+  tor:
+    image: goldy/tor-hidden-service:latest
+    links:
+      - nginx
+      - php
+    depends_on:
+      - nginx
+      - php
+    environment:
+      secret_hidden_service_hosts: 80:nginx:80
+      secret_hidden_service_key: "put here the private key in base64 hash string format(no '')"
+      secret_hidden_service_version: "3" # you need to enter the container(or look at the logs maybe) to view the hostname(the hidden service url)
 networks:
   internal:
     driver: bridge
