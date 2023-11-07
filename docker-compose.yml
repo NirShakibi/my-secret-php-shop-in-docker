@@ -9,7 +9,7 @@ services:
     networks:
       - internal
     volumes:
-      - ./data/:/var/www/html/
+      - ./data/:/usr/share/nginx/html
       - ./logs/nginx:/var/log/nginx/
   php:
     build:
@@ -18,8 +18,8 @@ services:
     networks:
       - internal
     volumes:
-      - ./data/:/var/www/html/
-        - ./logs/php.log:/var/log/fpm-php.www.log
+      - ./data/:/usr/share/nginx/html
+      - ./logs/php.log:/var/log/fpm-php.www.log
   tor:
     image: goldy/tor-hidden-service:latest
     links:
@@ -31,7 +31,7 @@ services:
     environment:
       secret_hidden_service_hosts: 80:nginx:80
       secret_hidden_service_key: "put here the private key in base64 hash string format(no '')"
-      secret_hidden_service_version: "3" # you need to enter the container(or look at the logs maybe) to view the hostname(the hidden service url)
+      secret_hidden_service_version: "3" # you need to enter the container(or look at the logs maybe) to view the hostname(the hidden service url) or just remember the hostname that you have its private key if you decide to import it
 networks:
   internal:
     driver: bridge
