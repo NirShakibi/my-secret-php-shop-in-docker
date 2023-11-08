@@ -1,0 +1,52 @@
+services:
+  web:
+    image: nginx
+    ports:
+      - target: 80
+        published: 81
+        protocol: tcp
+        mode: host
+    volumes:
+      - ./docker/web/app.conf:/etc/nginx/nginx.conf:ro
+      - ./docker/app/data/:/usr/share/nginx/html/
+      - type: bind
+        source: .
+        target: /app
+    networks:
+      - main
+    depends_on:
+      - app
+  app:
+    #user: ${APP_USER:-catalog}
+    build:
+      dockerfile: ./docker/app/Dockerfile
+      args:
+        WWWUSER: "1000" #"root"
+        WWWGROUP: "1000" #"www-data"
+        APPUSER: "alla" #"alla"
+    volumes:
+      - ./docker/app/data/:/usr/share/nginx/html/
+      - type: bind
+        source: .
+        target: /app
+    networks:
+      - main
+  tor:
+    image: goldy/tor-hidden-service
+    environment:
+      CATALOG_TOR_SERVICE_HOSTS: 80:web:80
+      CATALOG_TOR_SERVICE_VERSION: "3"
+      # catalog: eevzcurum6qaoxybh5uxoa35nq67je5nnzcnxxk64lg5dwpwpy7k7iqd.onion
+      CATALOG_TOR_SERVICE_KEY: |
+        PT0gZWQyNTUxOXYxLXNlY3JldDogdHlwZTAgPT0AAABQnDgxbcoQ09bEf3WKEt2qt2US8vngGtEO
+        eWAJF92MYsugJjWHWKFAbjS9RxMbuVzaWKx8amdtTgjfpKhNK2En
+      TOR_SOCKS_PORT: 9050
+    networks:
+      - main
+    depends_on:
+      - web
+    links:
+      - web
+networks:
+  main:
+    driver: bridge
